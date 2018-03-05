@@ -2,6 +2,8 @@ module GB1.GroupByTest where
 
 import Test.Prelude
 import GB1.GroupBy
+import Hedgehog.Gen as Gen
+import Hedgehog.Range as Range
 
 
 
@@ -26,7 +28,9 @@ hprop_groupByWorksWithSameParity = property $ do
 --------------------------------------------------------------------------------
 
 groupedCorrectly :: (a -> a -> Bool) -> [[a]] -> Bool
-groupedCorrectly = undefined
+groupedCorrectly f = all (allMatch f)
+  where
+    allMatch f (x:xs) = all (f x) xs && allMatch f xs
 
 
 
@@ -35,7 +39,7 @@ groupedCorrectly = undefined
 --------------------------------------------------------------------------------
 
 genListInt :: Gen [Int]
-genListInt = undefined
+genListInt = Gen.list (Range.linear 0 100) (Gen.int $ Range.linear (-10000) 10000)
 
 
 
@@ -44,4 +48,7 @@ genListInt = undefined
 --------------------------------------------------------------------------------
 
 sameParity :: Integral a => a -> a -> Bool
-sameParity = undefined
+sameParity a b
+  | mod a 2 == 0 && mod b 2 == 0 = True
+  | mod a 2 == 0 || mod b 2 == 0 = False
+  | otherwise                 = True
