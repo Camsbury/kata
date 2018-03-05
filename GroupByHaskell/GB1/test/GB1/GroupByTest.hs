@@ -30,6 +30,7 @@ hprop_groupByWorksWithSameParity = property $ do
 groupedCorrectly :: (a -> a -> Bool) -> [[a]] -> Bool
 groupedCorrectly f = all (allMatch f)
   where
+    allMatch _ []     = True
     allMatch f (x:xs) = all (f x) xs && allMatch f xs
 
 

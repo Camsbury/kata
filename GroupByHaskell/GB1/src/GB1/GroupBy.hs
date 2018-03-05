@@ -6,5 +6,10 @@ module GB1.GroupBy
 
 import Prelude
 
+-- | 'groupBy' takes a transitive predicate, and applies it
+-- to a list to return a list of serial matches
 groupBy :: (a -> a -> Bool) -> [a] -> [[a]]
-groupBy = undefined
+groupBy _ [] = []
+groupBy f (x:xs) = groupHelp f x $ span (f x) xs
+  where
+    groupHelp f x (head, tail) = (x:head) : groupBy f tail
